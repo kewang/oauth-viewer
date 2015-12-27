@@ -1,5 +1,3 @@
-var system = require("system");
-var args = system.args;
 var casper = require('casper').create({
   verbose: true,
   logLevel: "debug"
@@ -11,8 +9,8 @@ casper.start(LOGIN_URL, function(){
   this.echo("Loaded login page");
 
   this.fill("#login > form", {
-    "login": args[4],
-    "password": args[5]
+    "login": casper.cli.args[0],
+    "password": casper.cli.args[1]
   }, true);
 });
 
