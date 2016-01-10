@@ -24,8 +24,18 @@ router.get('/:username/:password', function(req, res, next) {
 
     request.post('https://github.com/session', opts, function(login_error, login_response, login_body){
       if (login_response.statusCode == 302) {
-        request.get(login_response.headers.location, function(error, response, body){
-          res.send(body);
+        // login success
+        request.get("https://github.com/settings/applications", function(apps_error, apps_response, apps_body){
+          $ = cheerio.load(apps_body);
+
+          var oauth_apps = $("[id^='oauth-access-'] > div.table-list-cell.oauth-info-cell");
+          var apps = [];
+
+          oauth_apps.each(function(i, elem){
+            apps.push($(elem).find("a").first().text());
+          });
+
+          res.send(apps);
 
           return res.end();
         });
